@@ -2,3 +2,7 @@
 126_csdn_disQwen0.5B/
 .DS_Store
 .github
+.logs/
+./targeted_evolution_exp/
+./temp/
+./__pycache__/

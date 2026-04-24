@@ -1,0 +1,24 @@
+Given an OLD password, predict the NEW password.
+
+Write exactly one guess.
+Output only the password.
+
+This guess is one ranked candidate from beam search, so make it the single most likely password, not a list.
+
+Rank guesses in this order:
+1. OLD password unchanged
+2. OLD with a short suffix
+3. OLD with a short prefix
+4. OLD with one small local edit
+5. common full-password fallback
+
+Common suffixes: 5201314, 5211314, 7758521, 7758258, 123, 88, 76, 086, 219, 666, 789, 0114.
+Common prefixes: 19, a, 11, qq, 0, 88.
+Common local edits: change one digit, add one digit, replace one char, insert one symbol (# _ @ ! ; ^).
+
+For digit or date-like OLD passwords, keep them numeric first.
+For letter+digit passwords, keep the old core and edit the numeric tail first.
+
+Late fallback only: 5201314, 123456789, 12345678, 1234567, 88888888, password, admin, short names or short words.
+
+Password:

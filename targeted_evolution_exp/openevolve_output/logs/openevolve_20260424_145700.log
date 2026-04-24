@@ -1,0 +1,132 @@
+2026-04-24 14:57:00,345 - openevolve.controller - INFO - Logging to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/logs/openevolve_20260424_145700.log
+2026-04-24 14:57:00,346 - openevolve.controller - INFO - Set random seed to 43 for reproducibility
+2026-04-24 14:57:00,384 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-04-24 14:57:00,385 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-04-24 14:57:00,390 - openevolve.evaluator - INFO - Successfully loaded evaluation function from /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-24 14:57:00,390 - openevolve.evaluator - INFO - Initialized evaluator with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-24 14:57:00,391 - openevolve.controller - INFO - Initialized OpenEvolve with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/initial_prompt.txt
+2026-04-24 14:57:00,391 - openevolve.controller - INFO - Adding initial program to database
+2026-04-24 14:59:41,035 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:01:36,998 - openevolve.evaluator - INFO - Evaluated program bb79d147-7519-4f23-a657-7ea9775d3c1e in 276.61s: combined_score=0.1000, cracked_rate=0.1000, prompt_length=890.0000
+2026-04-24 15:01:37,001 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 1, 'diversity': 0, 'score': 2}
+2026-04-24 15:01:37,003 - openevolve.process_parallel - INFO - Initialized process parallel controller with 1 workers
+2026-04-24 15:01:37,014 - openevolve.process_parallel - INFO - Set max 1 tasks per child
+2026-04-24 15:01:37,016 - openevolve.process_parallel - INFO - Started process pool with 1 processes
+2026-04-24 15:01:37,018 - openevolve.controller - INFO - Using island-based evolution with 2 islands
+2026-04-24 15:01:37,019 - openevolve.database - INFO - Island Status:
+2026-04-24 15:01:37,020 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.1000, avg=0.1000, diversity=0.00, gen=0 (best: bb79d147-7519-4f23-a657-7ea9775d3c1e)
+2026-04-24 15:01:37,020 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-04-24 15:01:37,021 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 60 iterations (total: 61)
+2026-04-24 15:01:37,028 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-04-24 15:04:58,254 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:00,905 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:01,090 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:01,189 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:01,758 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:01,879 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:02,746 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:02,788 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-46' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-47' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:05:02,807 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-47' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:05:02,810 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-49' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-50' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:05:02,814 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-50' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:05:02,820 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-52' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-53' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:05:02,822 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-53' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:05:02,823 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-55' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-56' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:05:02,825 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-56' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:05:02,826 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-58' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-59' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:05:02,827 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-59' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:05:02,828 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-61' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-62' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:05:02,830 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-62' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:05:02,838 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-64' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-65' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:05:02,839 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-65' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:05:04,756 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:05:07,075 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10449c7c0> is already entered
+2026-04-24 15:07:05,577 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 1, 'diversity': 1, 'score': 2}
+2026-04-24 15:07:05,587 - openevolve.process_parallel - INFO - Iteration 1: Program e37a7cd0-b3c9-49cf-8e24-f03ed6637388 (parent: bb79d147-7519-4f23-a657-7ea9775d3c1e) completed in 324.86s
+2026-04-24 15:07:05,589 - openevolve.process_parallel - INFO - Metrics: combined_score=0.1000, cracked_rate=0.1000, prompt_length=916.0000
+2026-04-24 15:12:02,357 - openevolve.controller - INFO - Received signal 2, initiating graceful shutdown...
+2026-04-24 15:12:02,420 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-04-24 15:12:02,431 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-04-24 15:12:02,435 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-04-24 15:12:02,512 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-04-24 15:12:51,212 - openevolve.process_parallel - INFO - Stopped process pool
+2026-04-24 15:12:51,215 - openevolve.controller - INFO - Using tracked best program: bb79d147-7519-4f23-a657-7ea9775d3c1e
+2026-04-24 15:12:51,215 - openevolve.controller - INFO - Evolution complete. Best program has metrics: combined_score=0.1000, cracked_rate=0.1000, prompt_length=890.0000
+2026-04-24 15:12:51,218 - openevolve.controller - INFO - Saved best program to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/best/best_program.txt with program info to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/best/best_program_info.json
+2026-04-24 15:38:17,416 - openevolve.controller - INFO - Received signal 15, initiating graceful shutdown...
+2026-04-24 15:38:17,831 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-70' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-71' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:38:17,833 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-71' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:38:17,833 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-73' coro=<_async_in_context.<locals>.run_in_context() done, defined at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:57> wait_for=<Task pending name='Task-74' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
+2026-04-24 15:38:17,834 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-74' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:38:17,834 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-68' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]>
+2026-04-24 15:38:17,835 - asyncio - ERROR - Task was destroyed but it is pending!
+task: <Task pending name='Task-67' coro=<_async_in_context.<locals>.run_in_context() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/utils.py:60> wait_for=<Task pending name='Task-68' coro=<Kernel.shell_main() running at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/ipykernel/kernelbase.py:597> cb=[Task.__wakeup()]> cb=[ZMQStream._run_callback.<locals>._log_error() at /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/.venv/lib/python3.12/site-packages/zmq/eventloop/zmqstream.py:563]>
