@@ -1,0 +1,112 @@
+2026-04-24 14:43:05,695 - openevolve.controller - INFO - Logging to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/logs/openevolve_20260424_144305.log
+2026-04-24 14:43:05,696 - openevolve.controller - INFO - Set random seed to 43 for reproducibility
+2026-04-24 14:43:05,722 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: qwen3:8b
+2026-04-24 14:43:05,723 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: qwen3:8b (weight: 1.00)
+2026-04-24 14:43:05,742 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-04-24 14:43:05,743 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-04-24 14:43:05,744 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-04-24 14:43:05,749 - openevolve.evaluator - INFO - Successfully loaded evaluation function from /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-24 14:43:05,749 - openevolve.evaluator - INFO - Initialized evaluator with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-24 14:43:05,750 - openevolve.controller - INFO - Initialized OpenEvolve with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/initial_prompt.txt
+2026-04-24 14:43:05,750 - openevolve.controller - INFO - Adding initial program to database
+2026-04-24 14:43:09,189 - openevolve.evaluator - WARNING - Evaluation attempt 1/4 failed for program 55bbc758-b11b-4c7c-b753-dc421f543927: Evaluator subprocess failed with KeyError: 'EnableDump'
+Traceback (most recent call last):
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/openevolve_eval_subprocess.py", line 40, in main
+    payload = {"status": "ok", "result": evaluate(program_path)}
+                                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py", line 142, in evaluate
+    dump_enabled = bool(os.environ["EnableDump"])
+                        ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "<frozen os>", line 714, in __getitem__
+KeyError: 'EnableDump'
+
+2026-04-24 14:43:12,747 - openevolve.evaluator - WARNING - Evaluation attempt 2/4 failed for program 55bbc758-b11b-4c7c-b753-dc421f543927: Evaluator subprocess failed with KeyError: 'EnableDump'
+Traceback (most recent call last):
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/openevolve_eval_subprocess.py", line 40, in main
+    payload = {"status": "ok", "result": evaluate(program_path)}
+                                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py", line 142, in evaluate
+    dump_enabled = bool(os.environ["EnableDump"])
+                        ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "<frozen os>", line 714, in __getitem__
+KeyError: 'EnableDump'
+
+2026-04-24 14:43:16,308 - openevolve.evaluator - WARNING - Evaluation attempt 3/4 failed for program 55bbc758-b11b-4c7c-b753-dc421f543927: Evaluator subprocess failed with KeyError: 'EnableDump'
+Traceback (most recent call last):
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/openevolve_eval_subprocess.py", line 40, in main
+    payload = {"status": "ok", "result": evaluate(program_path)}
+                                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py", line 142, in evaluate
+    dump_enabled = bool(os.environ["EnableDump"])
+                        ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "<frozen os>", line 714, in __getitem__
+KeyError: 'EnableDump'
+
+2026-04-24 14:43:19,865 - openevolve.evaluator - WARNING - Evaluation attempt 4/4 failed for program 55bbc758-b11b-4c7c-b753-dc421f543927: Evaluator subprocess failed with KeyError: 'EnableDump'
+Traceback (most recent call last):
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/openevolve_eval_subprocess.py", line 40, in main
+    payload = {"status": "ok", "result": evaluate(program_path)}
+                                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py", line 142, in evaluate
+    dump_enabled = bool(os.environ["EnableDump"])
+                        ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "<frozen os>", line 714, in __getitem__
+KeyError: 'EnableDump'
+
+2026-04-24 14:43:19,867 - openevolve.evaluator - ERROR - All evaluation attempts failed for program 55bbc758-b11b-4c7c-b753-dc421f543927. Last error: Evaluator subprocess failed with KeyError: 'EnableDump'
+Traceback (most recent call last):
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/openevolve_eval_subprocess.py", line 40, in main
+    payload = {"status": "ok", "result": evaluate(program_path)}
+                                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py", line 142, in evaluate
+    dump_enabled = bool(os.environ["EnableDump"])
+                        ~~~~~~~~~~^^^^^^^^^^^^^^
+  File "<frozen os>", line 714, in __getitem__
+KeyError: 'EnableDump'
+
+2026-04-24 14:43:19,868 - openevolve.database - INFO - New MAP-Elites cell occupied in island 0: {'complexity': 1, 'diversity': 0, 'score': 2}
+2026-04-24 14:43:19,868 - openevolve.controller - WARNING - ⚠️  No 'combined_score' metric found in evaluation results. Using average of all numeric metrics (0.0000) for evolution guidance. For better evolution results, please modify your evaluator to return a 'combined_score' metric that properly weights different aspects of program performance.
+2026-04-24 14:43:19,873 - openevolve.process_parallel - INFO - Initialized process parallel controller with 1 workers
+2026-04-24 14:43:19,875 - openevolve.process_parallel - INFO - Set max 1 tasks per child
+2026-04-24 14:43:19,876 - openevolve.process_parallel - INFO - Started process pool with 1 processes
+2026-04-24 14:43:19,876 - openevolve.controller - INFO - Using island-based evolution with 2 islands
+2026-04-24 14:43:19,876 - openevolve.database - INFO - Island Status:
+2026-04-24 14:43:19,876 - openevolve.database - INFO -  * Island 0: 1 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0 (best: 55bbc758-b11b-4c7c-b753-dc421f543927)
+2026-04-24 14:43:19,877 - openevolve.database - INFO -    Island 1: 0 programs, best=0.0000, avg=0.0000, diversity=0.00, gen=0
+2026-04-24 14:43:19,877 - openevolve.process_parallel - INFO - Starting process-based evolution from iteration 1 for 60 iterations (total: 61)
+2026-04-24 14:43:19,884 - openevolve.process_parallel - INFO - Early stopping disabled
+2026-04-24 14:43:22,641 - openevolve.process_parallel - WARNING - Iteration 1 error: LLM generation failed: Connection error.
+2026-04-24 14:43:25,311 - openevolve.process_parallel - WARNING - Iteration 2 error: LLM generation failed: Connection error.
+2026-04-24 14:43:27,988 - openevolve.process_parallel - WARNING - Iteration 3 error: LLM generation failed: Connection error.
+2026-04-24 14:43:30,926 - openevolve.process_parallel - WARNING - Iteration 4 error: LLM generation failed: Connection error.
+2026-04-24 14:43:34,180 - openevolve.process_parallel - WARNING - Iteration 5 error: LLM generation failed: Connection error.
+2026-04-24 14:43:36,901 - openevolve.process_parallel - WARNING - Iteration 6 error: LLM generation failed: Connection error.
+2026-04-24 14:43:39,573 - openevolve.process_parallel - WARNING - Iteration 7 error: LLM generation failed: Connection error.
+2026-04-24 14:43:39,978 - asyncio - ERROR - Exception in callback Task.__step()
+handle: <Handle Task.__step()>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: cannot enter context: <_contextvars.Context object at 0x10779cb00> is already entered
+2026-04-24 14:43:42,351 - openevolve.process_parallel - WARNING - Iteration 8 error: LLM generation failed: Connection error.
+2026-04-24 14:43:45,192 - openevolve.process_parallel - WARNING - Iteration 9 error: LLM generation failed: Connection error.
+2026-04-24 14:43:47,958 - openevolve.process_parallel - WARNING - Iteration 10 error: LLM generation failed: Connection error.
+2026-04-24 14:43:50,606 - openevolve.process_parallel - WARNING - Iteration 11 error: LLM generation failed: Connection error.
+2026-04-24 14:43:53,314 - openevolve.process_parallel - WARNING - Iteration 12 error: LLM generation failed: Connection error.
+2026-04-24 14:43:55,934 - openevolve.process_parallel - WARNING - Iteration 13 error: LLM generation failed: Connection error.
+2026-04-24 14:43:58,584 - openevolve.process_parallel - WARNING - Iteration 14 error: LLM generation failed: Connection error.
+2026-04-24 14:44:01,193 - openevolve.process_parallel - WARNING - Iteration 15 error: LLM generation failed: Connection error.
+2026-04-24 14:44:03,816 - openevolve.process_parallel - WARNING - Iteration 16 error: LLM generation failed: Connection error.
+2026-04-24 14:44:06,614 - openevolve.process_parallel - WARNING - Iteration 17 error: LLM generation failed: Connection error.
+2026-04-24 14:44:09,367 - openevolve.process_parallel - WARNING - Iteration 18 error: LLM generation failed: Connection error.
+2026-04-24 14:44:12,140 - openevolve.process_parallel - WARNING - Iteration 19 error: LLM generation failed: Connection error.
+2026-04-24 14:44:15,206 - openevolve.process_parallel - WARNING - Iteration 20 error: LLM generation failed: Connection error.
+2026-04-24 14:44:16,119 - openevolve.controller - INFO - Received signal 15, initiating graceful shutdown...
+2026-04-24 14:44:16,121 - openevolve.process_parallel - INFO - Graceful shutdown requested...
+2026-04-24 14:44:16,127 - openevolve.process_parallel - INFO - Shutdown requested, canceling remaining evaluations...
+2026-04-24 14:44:16,128 - openevolve.process_parallel - INFO - ✅ Evolution completed - Shutdown requested
+2026-04-24 14:44:16,128 - openevolve.controller - INFO - Evolution stopped due to shutdown request
+2026-04-24 14:44:16,129 - openevolve.process_parallel - INFO - Stopped process pool
+2026-04-24 14:44:16,129 - openevolve.controller - INFO - Using tracked best program: 55bbc758-b11b-4c7c-b753-dc421f543927
+2026-04-24 14:44:16,130 - openevolve.controller - INFO - Evolution complete. Best program has metrics: error=0.0000
+2026-04-24 14:44:16,131 - openevolve.controller - INFO - Saved best program to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/best/best_program.txt with program info to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/best/best_program_info.json
