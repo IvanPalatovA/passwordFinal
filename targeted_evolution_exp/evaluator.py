@@ -1,5 +1,6 @@
 """Targeted evaluator: one guess per train sample (Old password -> password), cracked rate on train.json."""
 import os
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 import json
 from pathlib import Path
 from typing import Dict, Any
@@ -23,7 +24,6 @@ guess_one_length_buckets = [
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.25),
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.20),
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.20),
-    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.00),
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.00),
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.00)
 ]
@@ -197,8 +197,11 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
                     guess = (guess.split()[0] if guess.split() else guess)
                 guess = (guess[:64].strip() if guess else "")
                 guess = guess.rstrip('.')
-                if required_length is not None and len(guess) != required_length:
-                    continue
+                if required_length is not None:
+                    if len(guess) > required_length:
+                        guess = guess[:required_length]
+                    if len(guess) != required_length:
+                        continue
                 if guess and guess not in guesses:
                     guesses.append(guess)
                 break
@@ -206,6 +209,10 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
     def _clear_device_cache():
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
+            try:
+                torch.cuda.ipc_collect()
+            except Exception:
+                pass
         elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
             torch.mps.empty_cache()
 
@@ -218,6 +225,7 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
                     out = model.generate(**inputs,
                     max_new_tokens=required_length,
                     min_new_tokens=required_length,
+                    max_length=None,
                     num_beams=effective_batch,
                     num_return_sequences=effective_batch,
                     do_sample=False,
@@ -230,6 +238,7 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
                     out = model.generate(**inputs,
                     max_new_tokens=max_new_tokens,
                     min_new_tokens = min_new_tokens,
+                    max_length=None,
                     num_beams=effective_batch,
                     num_return_sequences=effective_batch,
                     do_sample=False,
@@ -237,11 +246,12 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
                     eos_token_id=stop_tokens,
                     early_stopping=True,
                     max_time=max_time_generate_passqwords)
-                    _collect_guesses(out)
+                    _collect_guesses(out, required_length=max_new_tokens)
                 elif guess_one_version == 2:
                     out = model.generate(**inputs,
                     max_new_tokens=max_new_tokens,
                     min_new_tokens = min_new_tokens,
+                    max_length=None,
                     num_beams=effective_batch,
                     num_return_sequences=effective_batch,
                     do_sample=False,
@@ -252,27 +262,47 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
                     no_repeat_ngram_size=2,
                     length_penalty=0.4,
                     max_time=max_time_generate_passqwords)
-                    _collect_guesses(out)
+                    _collect_guesses(out, required_length=max_new_tokens)
                 elif guess_one_version == 3:
                     beam_groups = int(os.environ["group_of_beam_cnt"])
-                    diverse_batch = math.ceil(float(effective_batch)/float(beam_groups))*beam_groups
-                    out = model.generate(**inputs,
-                    trust_remote_code=True,
-                    max_new_tokens=max_new_tokens,
-                    min_new_tokens = min_new_tokens,
-                    num_beams=diverse_batch,
-                    num_return_sequences=effective_batch,
-                    do_sample=False,
-                    pad_token_id=tokenizer.eos_token_id,
-                    eos_token_id=stop_tokens,
-                    early_stopping=True,
-                    repetition_penalty=1.15,
-                    no_repeat_ngram_size=2,
-                    length_penalty=0.4,
-                    num_beam_groups=beam_groups,
-                    diversity_penalty=0.4,
-                    max_time=max_time_generate_passqwords)
-                    _collect_guesses(out)
+                    beam_groups = min(beam_groups, effective_batch)
+                    while beam_groups > 1 and effective_batch % beam_groups != 0:
+                        beam_groups -= 1
+                    if beam_groups <= 1:
+                        out = model.generate(**inputs,
+                        trust_remote_code=True,
+                        max_new_tokens=max_new_tokens,
+                        min_new_tokens = min_new_tokens,
+                        max_length=None,
+                        num_beams=effective_batch,
+                        num_return_sequences=effective_batch,
+                        do_sample=False,
+                        pad_token_id=tokenizer.eos_token_id,
+                        eos_token_id=stop_tokens,
+                        early_stopping=True,
+                        repetition_penalty=1.15,
+                        no_repeat_ngram_size=2,
+                        length_penalty=0.4,
+                        max_time=max_time_generate_passqwords)
+                    else:
+                        out = model.generate(**inputs,
+                        trust_remote_code=True,
+                        max_new_tokens=max_new_tokens,
+                        min_new_tokens = min_new_tokens,
+                        max_length=None,
+                        num_beams=effective_batch,
+                        num_return_sequences=effective_batch,
+                        do_sample=False,
+                        pad_token_id=tokenizer.eos_token_id,
+                        eos_token_id=stop_tokens,
+                        early_stopping=True,
+                        repetition_penalty=1.15,
+                        no_repeat_ngram_size=2,
+                        length_penalty=0.4,
+                        num_beam_groups=beam_groups,
+                        diversity_penalty=0.4,
+                        max_time=max_time_generate_passqwords)
+                    _collect_guesses(out, required_length=max_new_tokens)
                 else:
                     raise ValueError("Значение guess_one_version = {guess_one_version} лежит вне отрезка [1, 4] либо является не целым числом")
                 del out
@@ -336,10 +366,6 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
         if 'out' in locals():
             del out
         del inputs
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
-        elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
-            torch.mps.empty_cache()
         gc.collect()
 
     if len(guesses) < num_guesses:
@@ -449,6 +475,10 @@ def evaluate(program_path: str) -> Dict[str, Any]:
         del tokenizer
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
+            try:
+                torch.cuda.ipc_collect()
+            except Exception:
+                pass
     elapsed = time.time() - started_at
     print(f"[evaluate] DONE: checked={total}, cracked_rate={cracked_rate:.4f}, elapsed_sec={elapsed:.1f}")
     return {"combined_score": cracked_rate, "cracked_rate": cracked_rate, "prompt_length": prompt_length}
