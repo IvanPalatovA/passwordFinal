@@ -6,12 +6,26 @@ from typing import Dict, Any
 import torch
 import random
 import time
+import math
 import multiprocessing as mp
 import gc
 import subprocess
 import shutil
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
+
+# выбор версии guess_one (натуральные числа 1..4)
+os.environ["PASSLLM_GUESS_ONE_VERSION"] = "1"
+# длины для версии 4: [N, N-1, N+1, N-2, N+2], сумма должна быть NUM_GUESSES
+guess_one_length_buckets = [
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.10),
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.25),
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.25),
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.20),
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.20)
+]
+# кол-во групп beam search для версии 3
+os.environ["group_of_beam_cnt"] = "8"
 
 # if "CUDA_VISIBLE_DEVICES" not in os.environ:
 #     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -30,11 +44,33 @@ DEVICE = os.environ["DEVICE"]
 max_length_sysprompt = 3000
 
 # логи
+
 # нагрузка на gpu
-os.environ["PASSLLM_GPU_LOG_EVERY_N_REQUESTS"] = "50"
+os.environ["PASSLLM_GPU_LOG_EVERY_N_REQUESTS"] = "-1"
 # раз в сколько циклов показывать прогресс выполнения и сам пароль
 verb_check_password = 20
+# включить вывод конретных генераций паролей + сколько всего показать за итерацию
+os.environ["EnableDump"] = "1"
+os.environ["PASSLLM_EVAL_DUMP_PREVIEW_COUNT"] = "-1"
+
+# отключить все логи в терминалеё
+shut_down_verbose_logs = False
+# отключить вообще все логи
+shut_down_all_logs = False
 # ==================== конец конфигураций  ==================
+
+
+
+if (shut_down_verbose_logs):
+    verb_check_password = -1
+    os.environ["PASSLLM_GPU_LOG_EVERY_N_REQUESTS"] = "-1"
+    os.environ["PASSLLM_EVAL_DUMP_PREVIEW_COUNT"] = "-1"
+    # os.environ["EnableDump"] = False
+if (shut_down_all_logs):
+    verb_check_password = -1
+    os.environ["PASSLLM_GPU_LOG_EVERY_N_REQUESTS"] = "-1"
+    os.environ["PASSLLM_EVAL_DUMP_PREVIEW_COUNT"] = "-1"
+    os.environ["EnableDump"] = False
 
 max_time_generate_passqwords = 100
 
@@ -47,6 +83,8 @@ NUM_GUESSES = int(os.environ["PASSLLM_NUM_GUESSES"])
 
 # дополнительная в % генерация для лучевого поиска
 os.environ["PASSLLM_EXTRA_GUESSES_RATIO"] = "0.2"
+if (sum(guess_one_length_buckets) != int(os.environ["PASSLLM_NUM_GUESSES"])):
+    raise ValueError(f"Неправильно задан guess_one_length_buckets! его сумма должна равнятся os.environ['PASSLLM_NUM_GUESSES'] а сейчас {guess_one_length_buckets} != {os.environ['PASSLLM_NUM_GUESSES']}")
 
 
 
@@ -133,6 +171,9 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
     inputs = tokenizer(full_input, return_tensors="pt", truncation=True, max_length=max_length_sysprompt).to(model.device)
 
     guesses = []
+    guess_one_version = int(os.environ.get("PASSLLM_GUESS_ONE_VERSION"))
+    if guess_one_version < 1 or guess_one_version > 4:
+        raise ValueError(f"guess_one_version неправильно задан, он должен быть 1<{guess_one_version}<4")
     total_guesses = int(num_guesses * (1 + extra_guesses_ratio))
     cycles = total_guesses // batch_size
     remainder = total_guesses % batch_size
@@ -140,37 +181,113 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
     if remainder > 0:
         batches.append(remainder)
 
+    def _collect_guesses(out_tensor, required_length=None):
+        for i in range(out_tensor.shape[0]):
+            generated = tokenizer.decode(out_tensor[i][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+            for line in generated.splitlines():
+                guess = line.strip()
+                if not guess:
+                    continue
+                if guess.lower().startswith("password:"):
+                    guess = guess[9:].strip()
+                if " " in guess or "\t" in guess:
+                    guess = (guess.split()[0] if guess.split() else guess)
+                guess = (guess[:64].strip() if guess else "")
+                guess = guess.rstrip('.')
+                if required_length is not None and len(guess) != required_length:
+                    continue
+                if guess and guess not in guesses:
+                    guesses.append(guess)
+                break
+
     try:
         stop_tokens = [tokenizer.eos_token_id] + tokenizer.encode("\n", add_special_tokens=False) + tokenizer.encode(" ", add_special_tokens=False)
         with torch.inference_mode():
-            for current_batch in batches:
-                out = model.generate(**inputs, 
-                max_new_tokens=max_new_tokens,
-                min_new_tokens = min_new_tokens, 
-                num_beams=current_batch, 
-                num_return_sequences=current_batch, 
-                do_sample=False, 
-                pad_token_id=tokenizer.eos_token_id, 
-                eos_token_id=stop_tokens, 
-                max_time=max_time_generate_passqwords)
-                for i in range(out.shape[0]):
-                    generated = tokenizer.decode(out[i][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
-                    for line in generated.splitlines():
-                        guess = line.strip()
-                        if not guess:
-                            continue
-                        if guess.lower().startswith("password:"):
-                            guess = guess[9:].strip()
-                        if " " in guess or "\t" in guess:
-                            guess = (guess.split()[0] if guess.split() else guess)
-                        guess = (guess[:64].strip() if guess else "")
-                        guess = guess.rstrip('.')
-                        if guess and guess not in guesses:
-                            guesses.append(guess)
+            if guess_one_version == 4:
+                length_offsets = [0, -1, 1, -2, 2]
+                if len(guess_one_length_buckets) != len(length_offsets):
+                    raise ValueError("guess_one_length_buckets должен иметь длину 5")
+                if sum(guess_one_length_buckets) != num_guesses:
+                    raise ValueError("Сумма guess_one_length_buckets должна быть равна NUM_GUESSES")
+                base_length = len(old_password)
+                for bucket_idx, bucket_count in enumerate(guess_one_length_buckets):
+                    if bucket_count <= 0:
+                        continue
+                    target_length = max(1, base_length + length_offsets[bucket_idx])
+                    bucket_cycles = bucket_count // batch_size
+                    bucket_remainder = bucket_count % batch_size
+                    bucket_batches = [batch_size] * bucket_cycles
+                    if bucket_remainder > 0:
+                        bucket_batches.append(bucket_remainder)
+                    for current_batch in bucket_batches:
+                        out = model.generate(**inputs, 
+                        max_new_tokens=target_length,
+                        min_new_tokens=target_length,
+                        num_beams=current_batch,
+                        num_return_sequences=current_batch,
+                        do_sample=False,
+                        pad_token_id=tokenizer.eos_token_id,
+                        eos_token_id=stop_tokens,
+                        early_stopping=True,
+                        max_time=max_time_generate_passqwords)
+                        _collect_guesses(out, required_length=target_length)
+                        del out
+                        if len(guesses) >= num_guesses:
+                            break
+                    if len(guesses) >= num_guesses:
                         break
-                del out
-                if len(guesses) >= num_guesses:
-                    break
+            else:
+                for current_batch in batches:
+                    if guess_one_version == 1:
+                        out = model.generate(**inputs, 
+                        max_new_tokens=max_new_tokens,
+                        min_new_tokens = min_new_tokens, 
+                        num_beams=current_batch, 
+                        num_return_sequences=current_batch, 
+                        do_sample=False, 
+                        pad_token_id=tokenizer.eos_token_id, 
+                        eos_token_id=stop_tokens, 
+                        early_stopping=True,
+                        max_time=max_time_generate_passqwords)
+                    elif guess_one_version == 2:
+                        out = model.generate(**inputs, 
+                        max_new_tokens=max_new_tokens,
+                        min_new_tokens = min_new_tokens, 
+                        num_beams=current_batch, 
+                        num_return_sequences=current_batch, 
+                        do_sample=False, 
+                        pad_token_id=tokenizer.eos_token_id, 
+                        eos_token_id=stop_tokens, 
+                        early_stopping=True,
+                        repetition_penalty=1.15,
+                        no_repeat_ngram_size=2,
+                        length_penalty=0.4,
+                        max_time=max_time_generate_passqwords)
+                    elif guess_one_version == 3:
+                        beam_groups = int(os.environ["group_of_beam_cnt"])
+                        diverse_batch = math.ceil(float(current_batch)/float(beam_groups))*beam_groups
+                        out = model.generate(**inputs, 
+                        trust_remote_code=True,
+                        max_new_tokens=max_new_tokens,
+                        min_new_tokens = min_new_tokens, 
+                        num_beams=diverse_batch, 
+                        num_return_sequences=current_batch, 
+                        do_sample=False, 
+                        pad_token_id=tokenizer.eos_token_id, 
+                        eos_token_id=stop_tokens, 
+                        early_stopping=True,
+                        repetition_penalty=1.15,
+                        no_repeat_ngram_size=2,
+                        length_penalty=0.4,
+                        num_beam_groups=beam_groups,
+                        diversity_penalty=0.4,
+                        max_time=max_time_generate_passqwords)
+                    else:
+                        raise ValueError("Значение guess_one_version = {guess_one_version} лежит вне отрезка [1, 4] либо является не целым числом")
+                    _collect_guesses(out)
+                    del out
+                    if len(guesses) >= num_guesses:
+                        break
     finally:
         # Явное удаление больших тензоров и очистка кэша CUDA для предотвращения утечек
         if 'out' in locals():
@@ -189,7 +306,7 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
 def evaluate(program_path: str) -> Dict[str, Any]:
     started_at = time.time()
     dump_enabled = bool(os.environ["EnableDump"])
-    dump_preview_count = int(os.environ.get("PASSLLM_EVAL_DUMP_PREVIEW_COUNT"))
+    dump_preview = int(os.environ.get("PASSLLM_EVAL_DUMP_PREVIEW_COUNT"))
     dump_dir = os.environ.get("PASSLLM_EVAL_DUMP_PATH")
     if not dump_dir:
         dump_dir = "./logs"
@@ -254,15 +371,13 @@ def evaluate(program_path: str) -> Dict[str, Any]:
                     "guesses": guesses,
                 }
             )
-
+        if (idx % dump_preview == 0):
+                for g in guesses[:NUM_GUESSES]:
+                    print("  " + g)
         if (idx % verb_check_password == 0):
             print(f"[evaluate] checked {idx}/{total}, hits={correct}")
             # print(f"old password is {old}")
             # print(f"new password is {target}")
-            if dump_enabled and shown < dump_preview_count:
-                for g in guesses[:NUM_GUESSES]:
-                    print("  " + g)
-                shown += 1
         _log_gpu_stats(idx, total)
 
     cracked_rate = correct / max_eval
