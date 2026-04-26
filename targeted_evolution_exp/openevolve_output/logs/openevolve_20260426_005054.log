@@ -1,0 +1,16 @@
+2026-04-26 00:50:54,832 - openevolve.controller - INFO - Logging to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/logs/openevolve_20260426_005054.log
+2026-04-26 00:50:54,912 - openevolve.controller - INFO - Set random seed to 43 for reproducibility
+2026-04-26 00:50:54,931 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: qwen3:8b
+2026-04-26 00:50:54,931 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: qwen3:8b (weight: 1.00)
+2026-04-26 00:50:54,949 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-04-26 00:50:54,951 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-04-26 00:50:54,951 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-04-26 00:50:54,954 - openevolve.evaluator - ERROR - Error loading evaluation function: invalid syntax. Perhaps you forgot a comma? (evaluator.py, line 237)
+2026-04-26 00:55:13,921 - openevolve.controller - INFO - Logging to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/logs/openevolve_20260426_005513.log
+2026-04-26 00:55:13,923 - openevolve.controller - INFO - Set random seed to 43 for reproducibility
+2026-04-26 00:55:13,961 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-04-26 00:55:13,962 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-04-26 00:55:16,166 - openevolve.evaluator - INFO - Successfully loaded evaluation function from /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-26 00:55:16,167 - openevolve.evaluator - INFO - Initialized evaluator with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-26 00:55:16,168 - openevolve.controller - INFO - Initialized OpenEvolve with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/initial_prompt.txt
+2026-04-26 00:55:16,168 - openevolve.controller - INFO - Adding initial program to database

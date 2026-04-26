@@ -1,8 +1,8 @@
 max_iterations: 60
-checkpoint_interval: 3
+checkpoint_interval: 5
 random_seed: 43
 diff_based_evolution: true
-max_tasks_per_child: 1
+max_tasks_per_child: 5000
 
 llm:
   api_base: "http://127.0.0.1:11434/v1"
@@ -16,7 +16,7 @@ llm:
 
 database:
   population_size: 16
-  num_islands: 2
+  num_islands: 3
   migration_interval: 8
   feature_dimensions: ["complexity", "diversity", "score"]
   feature_bins:
@@ -27,7 +27,7 @@ database:
 
 evaluator:
   timeout: 9999999
-  parallel_evaluations: 1
+  parallel_evaluations: 2
   enable_artifacts: true
   cascade_evaluation: false
   use_llm_feedback: false
@@ -48,7 +48,7 @@ prompt:
 
     The target prompt must tell the small model to:
     - predict NEW from OLD
-    - produce exactly 25 candidates
+    - produce exactly 100 candidates
     - treat them as separate candidate passwords, not one combined string
     - write one candidate per line
     - output only passwords

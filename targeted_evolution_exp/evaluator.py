@@ -13,38 +13,46 @@ import shutil
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
-if "CUDA_VISIBLE_DEVICES" not in os.environ:
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# if "CUDA_VISIBLE_DEVICES" not in os.environ:
+#     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
 
 PATH_TRAIN = os.environ["PASSLLM_TRAIN"]
 PATH_ADAPTER = os.environ["PASSLLM_ADAPTER_126_CSDN"]
 BASE_MODEL = os.environ["PASSLLM_BASE_MODEL"]
 DEVICE = os.environ["DEVICE"]
 
-# кол-во предложенных пар - старый пароль - новый пароль
-max_check_example = 50
+
+# ==================== начало конфигураций  =================
 
 
 # ограничение входного промпта для passllm
 max_length_sysprompt = 3000
 
-
-# кол-во генераций пароля на один target-пароль
-NUM_GUESSES = int(os.environ["PASSLLM_NUM_GUESSES"])
-
-# дополнительная в % генерация для лучевого поиска
-os.environ["PASSLLM_EXTRA_GUESSES_RATIO"] = "0.2"
+# логи
+# нагрузка на gpu
+os.environ["PASSLLM_GPU_LOG_EVERY_N_REQUESTS"] = "50"
+# раз в сколько циклов показывать прогресс выполнения и сам пароль
+verb_check_password = 20
+# ==================== конец конфигураций  ==================
 
 max_time_generate_passqwords = 100
 
 # кол-во параллельных вычислений пароля
 parallel_generations = int(os.environ["PASSLLM_NUM_GUESSES"])
 
-os.environ["PASSLLM_EVAL_MAX_SAMPLES"] = str(max_check_example)
+# кол-во генераций пароля на один target-пароль
+NUM_GUESSES = int(os.environ["PASSLLM_NUM_GUESSES"])
+
+
+# дополнительная в % генерация для лучевого поиска
+os.environ["PASSLLM_EXTRA_GUESSES_RATIO"] = "0.2"
+
+
 
 _cached_model = None
 _cached_tokenizer = None
-GPU_LOG_EVERY_N_REQUESTS = int(os.environ.get("PASSLLM_GPU_LOG_EVERY_N_REQUESTS", "10"))
+GPU_LOG_EVERY_N_REQUESTS = int(os.environ.get("PASSLLM_GPU_LOG_EVERY_N_REQUESTS"))
 _NVIDIA_SMI_PATH = shutil.which("nvidia-smi")
 
 def _is_main_process() -> bool:
@@ -118,7 +126,7 @@ def _load_model():
     _cached_model, _cached_tokenizer = model, tokenizer
     return _cached_model, _cached_tokenizer
 
-def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tokens, num_guesses, batch_size, extra_guesses_ratio: float):
+def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tokens, min_new_tokens, num_guesses, batch_size, extra_guesses_ratio: float):
     knowledge = json.dumps({"Old password": old_password})
     suffix = "\nPassword:" if not prompt_text.strip().endswith("Password:") else " "
     full_input = prompt_text.strip() + "\n" + knowledge + suffix
@@ -136,7 +144,15 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
         stop_tokens = [tokenizer.eos_token_id] + tokenizer.encode("\n", add_special_tokens=False) + tokenizer.encode(" ", add_special_tokens=False)
         with torch.inference_mode():
             for current_batch in batches:
-                out = model.generate(**inputs, max_new_tokens=max_new_tokens, num_beams=current_batch, num_return_sequences=current_batch, do_sample=False, pad_token_id=tokenizer.eos_token_id, eos_token_id=stop_tokens, max_time=max_time_generate_passqwords)
+                out = model.generate(**inputs, 
+                max_new_tokens=max_new_tokens,
+                min_new_tokens = min_new_tokens, 
+                num_beams=current_batch, 
+                num_return_sequences=current_batch, 
+                do_sample=False, 
+                pad_token_id=tokenizer.eos_token_id, 
+                eos_token_id=stop_tokens, 
+                max_time=max_time_generate_passqwords)
                 for i in range(out.shape[0]):
                     generated = tokenizer.decode(out[i][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
                     for line in generated.splitlines():
@@ -197,9 +213,9 @@ def evaluate(program_path: str) -> Dict[str, Any]:
         train_data = json.load(f)
     if isinstance(train_data, dict):
         train_data = [train_data]
-    max_eval = int(os.environ["PASSLLM_EVAL_MAX_SAMPLES"])
+    max_eval = int(os.environ["PASSLLM_NUM_GUESSES"])
     train_data = random.sample(train_data, max_eval)
-    print(f"[evaluate] to_check={len(train_data)} (max_check_example={max_check_example})")
+    print(f"[evaluate] to_check={len(train_data)} (max_check_example={int(os.environ["PASSLLM_NUM_GUESSES"])})")
     try:
         model, tokenizer = _load_model()
     except Exception as e:
@@ -218,6 +234,7 @@ def evaluate(program_path: str) -> Dict[str, Any]:
             old,
             model,
             tokenizer,
+            min_new_tokens=4,
             max_new_tokens=20,
             num_guesses=NUM_GUESSES,
             batch_size=parallel_generations,
@@ -238,10 +255,10 @@ def evaluate(program_path: str) -> Dict[str, Any]:
                 }
             )
 
-        if (idx % 10 == 0):
+        if (idx % verb_check_password == 0):
             print(f"[evaluate] checked {idx}/{total}, hits={correct}")
-            print(f"old password is {old}")
-            print(f"new password is {target}")
+            # print(f"old password is {old}")
+            # print(f"new password is {target}")
             if dump_enabled and shown < dump_preview_count:
                 for g in guesses[:NUM_GUESSES]:
                     print("  " + g)
