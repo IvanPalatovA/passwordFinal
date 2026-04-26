@@ -16,13 +16,16 @@ from peft import PeftModel
 
 # выбор версии guess_one (натуральные числа 1..4)
 os.environ["PASSLLM_GUESS_ONE_VERSION"] = "1"
-# длины для версии 4: [N, N-1, N+1, N-2, N+2], сумма должна быть NUM_GUESSES
+# длины для версии 4: [N, N-1, N+1, N-2, N+2, N+3, N+4], сумма должна быть NUM_GUESSES
 guess_one_length_buckets = [
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.10),
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.25),
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.25),
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.20),
-    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.20)
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.20),
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.00),
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.00),
+    int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.00)
 ]
 # кол-во групп beam search для версии 3
 os.environ["group_of_beam_cnt"] = "8"
@@ -200,13 +203,111 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
                     guesses.append(guess)
                 break
 
+    def _clear_device_cache():
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+            torch.mps.empty_cache()
+
+    def _run_generate_with_oom_split(current_batch, required_length=None):
+        pending_batches = [current_batch]
+        while pending_batches:
+            effective_batch = pending_batches.pop(0)
+            try:
+                if guess_one_version == 4:
+                    out = model.generate(**inputs,
+                    max_new_tokens=required_length,
+                    min_new_tokens=required_length,
+                    num_beams=effective_batch,
+                    num_return_sequences=effective_batch,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=stop_tokens,
+                    early_stopping=True,
+                    max_time=max_time_generate_passqwords)
+                    _collect_guesses(out, required_length=required_length)
+                elif guess_one_version == 1:
+                    out = model.generate(**inputs,
+                    max_new_tokens=max_new_tokens,
+                    min_new_tokens = min_new_tokens,
+                    num_beams=effective_batch,
+                    num_return_sequences=effective_batch,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=stop_tokens,
+                    early_stopping=True,
+                    max_time=max_time_generate_passqwords)
+                    _collect_guesses(out)
+                elif guess_one_version == 2:
+                    out = model.generate(**inputs,
+                    max_new_tokens=max_new_tokens,
+                    min_new_tokens = min_new_tokens,
+                    num_beams=effective_batch,
+                    num_return_sequences=effective_batch,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=stop_tokens,
+                    early_stopping=True,
+                    repetition_penalty=1.15,
+                    no_repeat_ngram_size=2,
+                    length_penalty=0.4,
+                    max_time=max_time_generate_passqwords)
+                    _collect_guesses(out)
+                elif guess_one_version == 3:
+                    beam_groups = int(os.environ["group_of_beam_cnt"])
+                    diverse_batch = math.ceil(float(effective_batch)/float(beam_groups))*beam_groups
+                    out = model.generate(**inputs,
+                    trust_remote_code=True,
+                    max_new_tokens=max_new_tokens,
+                    min_new_tokens = min_new_tokens,
+                    num_beams=diverse_batch,
+                    num_return_sequences=effective_batch,
+                    do_sample=False,
+                    pad_token_id=tokenizer.eos_token_id,
+                    eos_token_id=stop_tokens,
+                    early_stopping=True,
+                    repetition_penalty=1.15,
+                    no_repeat_ngram_size=2,
+                    length_penalty=0.4,
+                    num_beam_groups=beam_groups,
+                    diversity_penalty=0.4,
+                    max_time=max_time_generate_passqwords)
+                    _collect_guesses(out)
+                else:
+                    raise ValueError("Значение guess_one_version = {guess_one_version} лежит вне отрезка [1, 4] либо является не целым числом")
+                del out
+            except torch.OutOfMemoryError:
+                if 'out' in locals():
+                    del out
+                _clear_device_cache()
+                gc.collect()
+                if effective_batch <= 1:
+                    raise
+                left_batch = effective_batch // 2
+                right_batch = effective_batch - left_batch
+                pending_batches = [left_batch, right_batch] + pending_batches
+            except RuntimeError as e:
+                if "out of memory" not in str(e).lower():
+                    raise
+                if 'out' in locals():
+                    del out
+                _clear_device_cache()
+                gc.collect()
+                if effective_batch <= 1:
+                    raise
+                left_batch = effective_batch // 2
+                right_batch = effective_batch - left_batch
+                pending_batches = [left_batch, right_batch] + pending_batches
+            if len(guesses) >= num_guesses:
+                break
+
     try:
         stop_tokens = [tokenizer.eos_token_id] + tokenizer.encode("\n", add_special_tokens=False) + tokenizer.encode(" ", add_special_tokens=False)
         with torch.inference_mode():
             if guess_one_version == 4:
-                length_offsets = [0, -1, 1, -2, 2]
+                length_offsets = [0, -1, 1, -2, 2, 3, 4]
                 if len(guess_one_length_buckets) != len(length_offsets):
-                    raise ValueError("guess_one_length_buckets должен иметь длину 5")
+                    raise ValueError("guess_one_length_buckets должен иметь длину 7")
                 if sum(guess_one_length_buckets) != num_guesses:
                     raise ValueError("Сумма guess_one_length_buckets должна быть равна NUM_GUESSES")
                 base_length = len(old_password)
@@ -220,72 +321,14 @@ def guess_one(prompt_text: str, old_password: str, model, tokenizer, max_new_tok
                     if bucket_remainder > 0:
                         bucket_batches.append(bucket_remainder)
                     for current_batch in bucket_batches:
-                        out = model.generate(**inputs, 
-                        max_new_tokens=target_length,
-                        min_new_tokens=target_length,
-                        num_beams=current_batch,
-                        num_return_sequences=current_batch,
-                        do_sample=False,
-                        pad_token_id=tokenizer.eos_token_id,
-                        eos_token_id=stop_tokens,
-                        early_stopping=True,
-                        max_time=max_time_generate_passqwords)
-                        _collect_guesses(out, required_length=target_length)
-                        del out
+                        _run_generate_with_oom_split(current_batch, required_length=target_length)
                         if len(guesses) >= num_guesses:
                             break
                     if len(guesses) >= num_guesses:
                         break
             else:
                 for current_batch in batches:
-                    if guess_one_version == 1:
-                        out = model.generate(**inputs, 
-                        max_new_tokens=max_new_tokens,
-                        min_new_tokens = min_new_tokens, 
-                        num_beams=current_batch, 
-                        num_return_sequences=current_batch, 
-                        do_sample=False, 
-                        pad_token_id=tokenizer.eos_token_id, 
-                        eos_token_id=stop_tokens, 
-                        early_stopping=True,
-                        max_time=max_time_generate_passqwords)
-                    elif guess_one_version == 2:
-                        out = model.generate(**inputs, 
-                        max_new_tokens=max_new_tokens,
-                        min_new_tokens = min_new_tokens, 
-                        num_beams=current_batch, 
-                        num_return_sequences=current_batch, 
-                        do_sample=False, 
-                        pad_token_id=tokenizer.eos_token_id, 
-                        eos_token_id=stop_tokens, 
-                        early_stopping=True,
-                        repetition_penalty=1.15,
-                        no_repeat_ngram_size=2,
-                        length_penalty=0.4,
-                        max_time=max_time_generate_passqwords)
-                    elif guess_one_version == 3:
-                        beam_groups = int(os.environ["group_of_beam_cnt"])
-                        diverse_batch = math.ceil(float(current_batch)/float(beam_groups))*beam_groups
-                        out = model.generate(**inputs, 
-                        trust_remote_code=True,
-                        max_new_tokens=max_new_tokens,
-                        min_new_tokens = min_new_tokens, 
-                        num_beams=diverse_batch, 
-                        num_return_sequences=current_batch, 
-                        do_sample=False, 
-                        pad_token_id=tokenizer.eos_token_id, 
-                        eos_token_id=stop_tokens, 
-                        early_stopping=True,
-                        repetition_penalty=1.15,
-                        no_repeat_ngram_size=2,
-                        length_penalty=0.4,
-                        num_beam_groups=beam_groups,
-                        diversity_penalty=0.4,
-                        max_time=max_time_generate_passqwords)
-                    else:
-                        raise ValueError("Значение guess_one_version = {guess_one_version} лежит вне отрезка [1, 4] либо является не целым числом")
-                    _collect_guesses(out)
-                    del out
+                    _run_generate_with_oom_split(current_batch)
                     if len(guesses) >= num_guesses:
                         break
     finally:
