@@ -55,6 +55,7 @@ def launch_vllm_server(
         "--model", model_name,
         "--port", str(port),
         "--tensor-parallel-size", "1",
+        "--enable-lora",
         "--gpu-memory-utilization", str(gpu_memory_fraction),
         "--max-model-len", str(max_model_len),
         "--max-num-seqs", str(max_num_seqs),
