@@ -1,24 +1,74 @@
-Given an OLD password, predict the NEW password.
+You transform OLD into the most likely NEW password candidate.
 
-Write exactly one guess.
-Output only the password.
+Output rules:
+- Write exactly one password.
+- Output only the password text.
+- No explanation.
+- No spaces.
+- No quotes.
+- No list.
+- No numbering.
 
-This guess is one ranked candidate from beam search, so make it the single most likely password, not a list.
+The decoder may force a specific output length.
+Within that forced length, choose the most likely candidate.
 
-Rank guesses in this order:
-1. OLD password unchanged
-2. OLD with a short suffix
-3. OLD with a short prefix
-4. OLD with one small local edit
-5. common full-password fallback
+Main rule:
+Keep OLD unchanged whenever the forced length allows it.
 
-Common suffixes: 5201314, 5211314, 7758521, 7758258, 123, 88, 76, 086, 219, 666, 789, 0114.
-Common prefixes: 19, a, 11, qq, 0, 88.
-Common local edits: change one digit, add one digit, replace one char, insert one symbol (# _ @ ! ; ^).
+If OLD cannot fit exactly, keep the OLD core and make the smallest likely change.
 
-For digit or date-like OLD passwords, keep them numeric first.
-For letter+digit passwords, keep the old core and edit the numeric tail first.
+Use this priority:
 
-Late fallback only: 5201314, 123456789, 12345678, 1234567, 88888888, password, admin, short names or short words.
+A. Same length:
+Copy OLD.
+If not copying, make only one tiny local change.
+Prefer changing one digit, one letter, or one symbol.
+Full reset is late.
+
+B. Longer by 1:
+Prefer OLD plus one suffix.
+Best suffixes: 0, 1, 8, 2, 5, 9, 7, 4, 3, 6, a.
+Then try one prefix: 0, 8, a.
+
+C. Longer by 2:
+Prefer OLD plus one short suffix.
+Best suffixes: 78, 11, 00, aa, qq, cc, 88, 66, 99, vv, 12.
+Then try prefix plus OLD.
+Best prefixes: 19, 11, 00, aa, qq, 66, 88.
+Prefix 19 is very strong.
+
+D. Longer by 3:
+Prefer OLD plus one common suffix.
+Best suffixes: 520, 789, 123, 521, 666, 888, aaa, bbb.
+Use prefix 123 or 520 only after suffixes.
+
+E. Shorter:
+Shortening is rare.
+Prefer simple trimming from the end.
+If trimming looks bad, use a common reset with the forced length.
+
+F. If near-copy cannot match the forced length:
+Use a common full reset of exactly the forced length.
+Strong resets: 111111, 666666, 888888, 123456, 000000, 7758521, 5201314, 1314520, 123456789, 00000000, 11111111, 88888888, 147258369, 66666666, 12345678, 123321, 1234567890, 123123123, 111111111, 1234567.
+
+Dataset habits:
+- OLD unchanged is very common.
+- OLD plus suffix is very common.
+- Prefix plus OLD is useful but less common than suffix.
+- Full reset happens, but should rank after near-copy unless length forces it.
+- Digits usually stay digits.
+- Date-like OLD usually stays numeric.
+- Letter+digit OLD usually keeps the word/core and changes the numeric tail.
+- Lowercase word OLD may get digits appended.
+- First-letter capitalization plus digits is possible but secondary.
+- Special symbols are rare; use them late.
+
+Important numeric tokens:
+Preserve or add these when length allows:
+520, 521, 1314, 5201314, 5211314, 7758521, 7758258, 1314520.
+
+Do not be creative.
+Do not explain.
+Return only the single best NEW candidate.
 
 Password:

@@ -1,0 +1,25 @@
+2026-04-29 22:43:42,373 - openevolve.controller - INFO - Logging to /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/openevolve_output/logs/openevolve_20260429_224342.log
+2026-04-29 22:43:43,486 - openevolve.controller - INFO - Set random seed to 43 for reproducibility
+2026-04-29 22:43:43,504 - openevolve.llm.openai - INFO - Initialized OpenAI LLM with model: qwen3:8b
+2026-04-29 22:43:43,505 - openevolve.llm.ensemble - INFO - Initialized LLM ensemble with models: qwen3:8b (weight: 1.00)
+2026-04-29 22:43:43,522 - openevolve.prompt.sampler - INFO - Initialized prompt sampler
+2026-04-29 22:43:43,523 - openevolve.prompt.sampler - INFO - Set custom templates: system=evaluator_system_message, user=None
+2026-04-29 22:43:43,523 - openevolve.database - INFO - Initialized program database with 0 programs
+2026-04-29 22:43:46,123 - openevolve.evaluator - INFO - Successfully loaded evaluation function from /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-29 22:43:46,124 - openevolve.evaluator - INFO - Initialized evaluator with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/evaluator.py
+2026-04-29 22:43:46,124 - openevolve.controller - INFO - Initialized OpenEvolve with /Users/admin/Documents/дисциплины/4 семестр/Safe-AI (T-bank and AIRI)/passwordFinal/targeted_evolution_exp/initial_prompt.txt
+2026-04-29 22:43:46,125 - openevolve.controller - INFO - Adding initial program to database
+2026-04-29 22:43:59,346 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-29 22:43:59,412 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/config.json "HTTP/1.1 200 OK"
+2026-04-29 22:43:59,574 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-29 22:43:59,647 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-04-29 22:43:59,817 - httpx - INFO - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-04-29 22:44:00,017 - httpx - INFO - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-04-29 22:44:00,535 - httpx - INFO - HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen2.5-0.5B-Instruct "HTTP/1.1 200 OK"
+2026-04-29 22:44:00,699 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-29 22:44:00,759 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/config.json "HTTP/1.1 200 OK"
+2026-04-29 22:44:00,931 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-29 22:44:00,993 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/config.json "HTTP/1.1 200 OK"
+2026-04-29 22:44:01,554 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-29 22:44:01,739 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-0.5B-Instruct/7ae557604adf67be50417f59c2c2f167def9a775/generation_config.json "HTTP/1.1 200 OK"
+2026-04-29 22:44:01,900 - httpx - INFO - HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"

@@ -1,0 +1,23 @@
+You transform OLD into the most likely NEW password candidate.
+
+Output rules:
+- Write exactly one password.
+- Output only the password text.
+- No explanation.
+- No spaces.
+- No quotes.
+- No list.
+- No numbering.
+
+Main rule: Keep OLD unchanged if possible.
+
+Priority rules:
+A. Same length: Copy OLD. If not, change one digit/letter/symbol.
+B. +1: Append 0/1/8/2/5/9/7/4/3/6/a. Then add 0/8/a prefix.
+C. +2: Append 78/11/00/aa/qq/cc/88/66/99/vv/12. Then add 19/11/00/aa/qq/66/88 prefix.
+D. +3: Append 520/789/123/521/666/888/aaa/bbb. Use 123/520 prefix after suffixes.
+E. Shorter: Trim end. If poor, use 111111/666666/888888/123456/000000/7758521/5201314/1314520/123456789/00000000/11111111/88888888/147258369/66666666/12345678/123321/1234567890/123123123/111111111/1234567.
+
+Key tokens: 520/521/1314/5201314/5211314/7758521/7758258/1314520.
+
+Password:

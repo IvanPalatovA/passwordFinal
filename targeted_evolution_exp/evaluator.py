@@ -16,7 +16,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
 # выбор версии guess_one (натуральные числа 1..4)
-os.environ["PASSLLM_GUESS_ONE_VERSION"] = "1"
+os.environ["PASSLLM_GUESS_ONE_VERSION"] = "4"
 # длины для версии 4: [N, N-1, N+1, N-2, N+2, N+3, N+4], сумма должна быть NUM_GUESSES
 guess_one_length_buckets = [
     int(int(os.environ["PASSLLM_NUM_GUESSES"]) * 0.10),
@@ -44,17 +44,17 @@ DEVICE = os.environ["DEVICE"]
 
 
 # ограничение входного промпта для passllm
-max_length_sysprompt = 3000
+max_length_sysprompt = 10000
 
 # логи
 
 # нагрузка на gpu
-os.environ["PASSLLM_GPU_LOG_EVERY_N_REQUESTS"] = "-1"
+os.environ["PASSLLM_GPU_LOG_EVERY_N_REQUESTS"] = "100"
 # раз в сколько циклов показывать прогресс выполнения и сам пароль
 verb_check_password = 20
 # включить вывод конретных генераций паролей + сколько всего показать за итерацию
-os.environ["EnableDump"] = "1"
-os.environ["PASSLLM_EVAL_DUMP_PREVIEW_COUNT"] = "-1"
+os.environ["EnableDump"] = "500"
+os.environ["PASSLLM_EVAL_DUMP_PREVIEW_COUNT"] = "999999999"
 
 # отключить все логи в терминалеё
 shut_down_verbose_logs = False
