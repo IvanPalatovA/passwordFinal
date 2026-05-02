@@ -59,7 +59,6 @@ def launch_vllm_server(
         "--max-model-len", str(max_model_len),
         "--max-num-seqs", str(max_num_seqs),
         "--enable-prefix-caching",  # Кэширование префиксов (помогает для похожих промптов)
-        "--disable-frontend-multiprocessing",
     ]
     
     # LoRA адаптер
@@ -73,8 +72,8 @@ def launch_vllm_server(
     if disable_log_stats:
         cmd.append("--disable-log-stats")
     
-    # Отключаем quantization по умолчанию для точности
-    cmd.append("--disable-log-requests")
+    # Совместимый с текущими версиями vLLM флаг отключения логов запросов.
+    cmd.append("--no-enable-log-requests")
     
     print("[vllm-server] Параметры:")
     for i in range(0, len(cmd), 2):
